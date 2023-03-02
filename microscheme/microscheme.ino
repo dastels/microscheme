@@ -6,7 +6,6 @@
 // ----------------------------------------------------------------------------
 
 #include <stdio.h>
-#include "diag/Trace.h"
 
 // ----------------------------------------------------------------------------
 //
@@ -28,8 +27,12 @@
 #pragma GCC diagnostic ignored "-Wmissing-declarations"
 #pragma GCC diagnostic ignored "-Wreturn-type"
 
-int
-main(int argc, char* argv[])
+void setup()
+{
+}
+
+
+void loop()
 {
   // At this stage the system clock should have already been configured
   // at high speed.
