@@ -49,8 +49,8 @@ typedef struct data_t {
   } data;
 } data_t;
 
-data_t *LISP_FALSE;
-data_t *LISP_TRUE;
+extern data_t *LISP_FALSE;
+extern data_t *LISP_TRUE;
 
 void initialize_lisp_data_system();
 

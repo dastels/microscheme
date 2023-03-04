@@ -7,6 +7,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include <strings.h>
 #include <stdbool.h>
 #include "dictionary.h"
@@ -658,7 +659,7 @@ data_t *append_impl(data_t *args, environment_frame_t *env, char **err_ptr)
   switch (length_of(args)) {
   case 0: return NULL;
   case 1: return car(args);
-  default: 
+  default:
     {
       Vector v;
       vector_init(&v);
@@ -682,11 +683,11 @@ data_t *appendbang_impl(data_t *args, environment_frame_t *env, char **err_ptr)
   *err_ptr = NULL;
 
   switch (length_of(args)) {
-  case 0: 
+  case 0:
     return NULL;
-  case 1: 
+  case 1:
     return car(args);
-  default: 
+  default:
     {
       data_t *result = car(args);
       data_t *last_list = result;
@@ -731,7 +732,7 @@ data_t *eq_impl(data_t *args, environment_frame_t *env, char **err_ptr)
     *err_ptr = strdup("Relative functions require exactly 2 arguments.");
     return NULL;
   }
- 
+
   return boolean_with_value(is_equal(car(args), car(cdr(args))));
 }
 
@@ -968,7 +969,7 @@ void register_primitives(void)
   register_primitive("list-head", 2, &listhead_impl);
   register_primitive("list-tail", 2, &listtail_impl);
 
-  register_primitive("append", -1, &append_impl);  
+  register_primitive("append", -1, &append_impl);
   register_primitive("append!", -1, &appendbang_impl);
 
   register_primitive("eq?", 2, &eq_impl);
@@ -977,7 +978,7 @@ void register_primitives(void)
   register_primitive("<=", 2, &lte_impl);
   register_primitive(">", 2, &gt_impl);
   register_primitive(">=", 2, &gte_impl);
-  
+
   register_primitive("nil?", 1, &nil_impl);
   register_primitive("list?", 1, &listp_impl);
   register_primitive("symbol?", 1, &symbolp_impl);

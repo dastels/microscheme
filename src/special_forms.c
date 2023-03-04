@@ -6,6 +6,7 @@
 /* This file contains special form implementations. */
 
 #include <stdlib.h>
+#include <string.h>
 #include <strings.h>
 #include "vector.h"
 #include "environment_frame.h"
@@ -46,13 +47,13 @@ data_t *define_impl(data_t *args, environment_frame_t *env, char **err_ptr)
       return NULL;
     }
     data_t *arg_names = cdr(declaration);
-    
+
     if (!all_of_type(SYMBOL_TYPE, arg_names)) {
       *err_ptr = strdup("All argument names must be symbols");
       return NULL;
     }
     data_t *body = cdr(args);
-    
+
     data_t *func = func_with_value(make_function(string_value(name), arg_names, body, env));
     bind(env, name, func);
     return func;
@@ -157,13 +158,13 @@ data_t *let_impl(data_t *args, environment_frame_t *env, char **err_ptr)
     }
     bind(local_env, binding_name, binding_value);
   }
-  
+
   data_t *result = evaluate_each(cdr(args), local_env, err_ptr);
   if (*err_ptr != NULL) {
     go_out_of_scope(local_env);
     return NULL;
   }
-  
+
   go_out_of_scope(local_env);
   return result;
 }
@@ -189,13 +190,13 @@ data_t *letstar_impl(data_t *args, environment_frame_t *env, char **err_ptr)
     }
     bind(local_env, binding_name, binding_value);
   }
-  
+
   data_t *result = evaluate_each(cdr(args), local_env, err_ptr);
   if (*err_ptr != NULL) {
     go_out_of_scope(local_env);
     return NULL;
   }
-  
+
   go_out_of_scope(local_env);
   return result;
 }
@@ -224,12 +225,12 @@ data_t *letrec_impl(data_t *args, environment_frame_t *env, char **err_ptr)
     }
     rebind(local_env, binding_name, binding_value);
   }
-  
+
   data_t *result = evaluate_each(cdr(args), local_env, err_ptr);
   if (*err_ptr != NULL) {
     return NULL;
   }
-  
+
   return result;
 }
 
@@ -371,7 +372,7 @@ data_t *do_impl(data_t *args, environment_frame_t *env, char **err_ptr)
     *err_ptr = strdup("do requires at least bindings and a termination clause.");
     return NULL;
   }
-    
+
   data_t *bindings = car(args);
   if (!listp(bindings)) {
     *err_ptr = strdup("do bindings must be a list.");
@@ -394,14 +395,14 @@ data_t *do_impl(data_t *args, environment_frame_t *env, char **err_ptr)
     }
     bind(local_env, binding_name, binding_value);
   }
-  
+
   data_t *termination = car(cdr(args));
   if (!listp(termination)) {
     *err_ptr = strdup("do termination clause must be a list");
     go_out_of_scope(local_env);
     return NULL;
-  }    
-  
+  }
+
   data_t *body = car(cdr(cdr(args)));
   while (true) {
     data_t *condition = evaluate(car(termination), local_env, err_ptr);

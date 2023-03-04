@@ -20,10 +20,10 @@ typedef struct environment_frame_t {
   int descendants;
   bool in_scope;
   struct environment_frame_t *parent;
-  dictionary_t *bindings;  
+  dictionary_t *bindings;
 } environment_frame_t;
 
-environment_frame_t *GLOBAL_ENV;
+extern environment_frame_t *GLOBAL_ENV;
 
 
 void initialize_environment(void);

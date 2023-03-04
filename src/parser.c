@@ -7,6 +7,7 @@
 
 #include <stdio.h>
 #include <stdbool.h>
+#include <string.h>
 #include "strings.h"
 #include "vector.h"
 #include "utils.h"
@@ -17,7 +18,7 @@
 #include "utils.h"
 
 
-data_t *make_integer(char *lit, char **err_ptr) 
+data_t *make_integer(char *lit, char **err_ptr)
 {
   int i;
   if (sscanf(lit, "%d", &i) == EOF) {
@@ -30,7 +31,7 @@ data_t *make_integer(char *lit, char **err_ptr)
 }
 
 
-data_t *make_hex_integer(char *lit, char **err_ptr) 
+data_t *make_hex_integer(char *lit, char **err_ptr)
 {
   __uint32_t i;
   *lit = '0';
@@ -44,14 +45,14 @@ data_t *make_hex_integer(char *lit, char **err_ptr)
 }
 
 
-data_t *make_string(char *lit, char **err_ptr) 
+data_t *make_string(char *lit, char **err_ptr)
 {
   *err_ptr = NULL;
   return string_with_value(lit);
 }
 
 
-data_t *make_symbol(char *lit, char **err_ptr) 
+data_t *make_symbol(char *lit, char **err_ptr)
 {
   *err_ptr = NULL;
   return intern_symbol(lit);
@@ -59,7 +60,7 @@ data_t *make_symbol(char *lit, char **err_ptr)
 
 data_t *parse_expression(bool *, char **); /* forward ref */
 
-data_t *parse_cons_cell(bool *eof, char **err_ptr) 
+data_t *parse_cons_cell(bool *eof, char **err_ptr)
 {
   *err_ptr = NULL;
   token_t token = get_token();
@@ -105,7 +106,7 @@ data_t *parse_cons_cell(bool *eof, char **err_ptr)
 }
 
 
-data_t *parse_expression(bool *eof, char **err_ptr) 
+data_t *parse_expression(bool *eof, char **err_ptr)
 {
   data_t *d = NULL;
   *err_ptr = NULL;
@@ -183,7 +184,7 @@ data_t *parse_expression(bool *eof, char **err_ptr)
 }
 
 
-data_t *parse(char *source, char **err_ptr) 
+data_t *parse(char *source, char **err_ptr)
 {
 #ifdef DEBUG_TRACE
   printf("Starting parse\n");

@@ -28,6 +28,9 @@ int total_cell_count = 0;
 int free_cell_count = 0;
 dictionary_t* interned_symbols;
 
+data_t *LISP_FALSE;
+data_t *LISP_TRUE;
+
 
 int total_cells(void)
 {
@@ -111,14 +114,14 @@ data_t *retain(data_t *d) {
 void release(data_t *d)
 {
   if (freep(d)) {
-#ifdef DEBUG_TRACE 
+#ifdef DEBUG_TRACE
     char * str = to_string(d);
     printf("TRYING TO RELEASE FREED DATA!  %s\n", str);
     free(str);
-#endif    
+#endif
     return;
   }
-  
+
   if (reference_counting_exempt(d)) {
     return;
   }
@@ -139,7 +142,7 @@ void release(data_t *d)
     case STRING_TYPE:
       free(d->data.string_data);
       break;
-    case CONS_CELL_TYPE: 
+    case CONS_CELL_TYPE:
       release(car(d));
       release(cdr(d));
       d->data.pair.car_ptr = NULL;
@@ -154,7 +157,7 @@ void release(data_t *d)
     default:
       break;
     }
-    
+
     free_data(d);
   } else {
 #ifdef DEBUG_TRACE
@@ -270,7 +273,7 @@ data_t *alloc_data(__uint8_t the_type)
 bool allocate_heap(int heapsize)
 {
   /* allocate a heap */
-  heap = (data_t*)malloc(heapsize); 
+  heap = (data_t*)malloc(heapsize);
   if (heap == NULL) {
     return false;
   }
@@ -306,7 +309,7 @@ void initialize_lisp_data_system()
 {
   allocate_heap(INITIAL_HEAP_SIZE);
 #ifdef DEBUG_TRACE
-  printf("Allocated heal of %d cells, each %lu bytes.\n", total_cells(), sizeof(data_t));
+  printf("Allocated heap of %d cells, each %lu bytes.\n", total_cells(), sizeof(data_t));
 #endif
   LISP_FALSE = internal_boolean_with_value(false);
   LISP_TRUE = internal_boolean_with_value(true);
@@ -588,7 +591,7 @@ int length_of(data_t *d)
   }
   return len;
 }
-  
+
 
 char *string_value(data_t *d)
 {
@@ -680,7 +683,7 @@ char *list_to_string(data_t *d)
   buf[len-2] = ')';
   buf[len-1] = 0;
   free(strings);
-  return buf;  
+  return buf;
 }
 
 
@@ -879,5 +882,3 @@ bool macrop(data_t *d)
 {
   return check_type(d, MACRO_TYPE);
 }
-
-

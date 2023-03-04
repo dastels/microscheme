@@ -9,6 +9,8 @@
 #include <stdio.h>
 #include "environment_frame.h"
 
+environment_frame_t *GLOBAL_ENV;
+
 void init_environments(void);
 void add_environment(environment_frame_t *value);
 void remove_environment(environment_frame_t *value);
@@ -157,7 +159,7 @@ void clean_environment(environment_frame_t *env)
 #ifdef DEBUG_TRACE
   printf("Cleaning environment 0x%X.\n", (unsigned int)env);
 #endif
-  
+
   with_each_value_do(env->bindings, &release_binding);
 }
 
@@ -178,5 +180,3 @@ void go_out_of_scope(environment_frame_t *env)
     free(env);
   }
 }
-
-

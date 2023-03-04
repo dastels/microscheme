@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
+#include <string.h>
 #include <strings.h>
 #include "vector.h"
 #include "utils.h"
@@ -104,7 +105,7 @@ data_t *apply_macro(macro_t *macro, data_t *arguments, environment_frame_t *env,
   if (*err_ptr != NULL) {
     return NULL;
   }
-  
+
   return result;
 }
 
@@ -188,7 +189,7 @@ data_t *evaluate(data_t *sexpr, environment_frame_t *env, char **err_ptr)
   case SYMBOL_TYPE:
     result = value_of(env, sexpr);
     break;
-  case CONS_CELL_TYPE: 
+  case CONS_CELL_TYPE:
     {
       data_t *func_object = value_of(env, car(sexpr));
       if (func_object == NULL) {
