@@ -52,7 +52,7 @@ typedef struct data_t {
 extern data_t *LISP_FALSE;
 extern data_t *LISP_TRUE;
 
-void initialize_lisp_data_system();
+void initialize_lisp_data_system(void);
 
 data_t *alloc_data(__uint8_t);
 void free_data(data_t*);

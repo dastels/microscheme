@@ -16,7 +16,7 @@
 #include "parser.h"
 #include "tokenizer.h"
 #include "utils.h"
-
+#include "logging.h"
 
 data_t *make_integer(char *lit, char **err_ptr)
 {
@@ -186,16 +186,12 @@ data_t *parse_expression(bool *eof, char **err_ptr)
 
 data_t *parse(char *source, char **err_ptr)
 {
-#ifdef DEBUG_TRACE
-  printf("Starting parse\n");
-#endif
+  log_debug("Starting parse");
   *err_ptr = NULL;
   bool eof_flag = false;
   initialize_tokenizer(source);
   data_t *result = parse_expression(&eof_flag, err_ptr);
-#ifdef DEBUG_TRACE
-  printf("Ending parse\n");
-#endif
+  log_debug("Ending parse");
   return result;
 }
 

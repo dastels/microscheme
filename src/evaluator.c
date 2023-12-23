@@ -16,6 +16,7 @@
 #include "primitive_function.h"
 #include "function.h"
 #include "evaluator.h"
+#include "logging.h"
 
 
 data_t *apply_func(function_t *func, data_t *arguments, environment_frame_t *env, char **err_ptr)
@@ -112,9 +113,7 @@ data_t *apply_macro(macro_t *macro, data_t *arguments, environment_frame_t *env,
 
 data_t *apply_prim(primitive_function_t *prim, data_t *arguments, environment_frame_t *env, char **err_ptr)
 {
-#ifdef DEBUG_TRACE
-  printf("Entering %s\n", prim->name);
-#endif
+  log_debug("Entering %s", prim->name);
   *err_ptr = NULL;
   int argument_count = length_of(arguments);
   int expected_number_of_arguments = prim->number_of_parameters;
@@ -154,11 +153,9 @@ data_t *apply_prim(primitive_function_t *prim, data_t *arguments, environment_fr
     if (*err_ptr != NULL) {
       return NULL;
     }
-#ifdef DEBUG_TRACE
-    char *str = to_string(result);
-    printf("Prim %s returning %s\n", prim->name, str);
+    char* str = to_string(result);
+    log_debug("Prim %s returning %s", prim->name, str);
     free(str);
-#endif
     return result;
   }
 }
@@ -167,11 +164,9 @@ data_t *apply_prim(primitive_function_t *prim, data_t *arguments, environment_fr
 data_t *evaluate(data_t *sexpr, environment_frame_t *env, char **err_ptr)
 {
   data_t *result = NULL;
-#ifdef DEBUG_TRACE
-  char *str = to_string(sexpr);
-  printf("Evaluating %s\n", str);
+  char* str = to_string(sexpr);
+  log_debug("Evaluating %s", str);
   free(str);
-#endif
   *err_ptr = NULL;
   switch (type_of(sexpr)) {
   case FREE_TYPE:
@@ -229,14 +224,12 @@ data_t *evaluate(data_t *sexpr, environment_frame_t *env, char **err_ptr)
       }
     }
   }
-#ifdef DEBUG_TRACE
   if (freep(result)) {
-    printf("HOLY SHIT! EVALUATE RESULTED IN A FREE NODE!!!\n");
+    log_critical("HOLY SHIT! EVALUATE RESULTED IN A FREE NODE!!!");
   }
   str = to_string(result);
-  printf("Evaluate returning %s\n", str);
+  log_debug("Evaluate returning %s", str);
   free(str);
-#endif
   return result;
 }
 

@@ -5,9 +5,12 @@
 /* This package implements a basic LISP interpretor for the ARM Cortex M4 */
 /* This file contains the environment frame. */
 
+#include <inttypes.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include "environment_frame.h"
+#include "logging.h"
+
 
 environment_frame_t *GLOBAL_ENV;
 
@@ -57,9 +60,7 @@ void set_binding(environment_frame_t *frame, data_t *symbol, binding_t *binding)
 environment_frame_t *new_environment_frame_below(environment_frame_t *parent_frame)
 {
   environment_frame_t *e = (environment_frame_t*)malloc(sizeof(environment_frame_t));
-#ifdef DEBUG_TRACE
-  printf("Environment 0x%X created.\n", (unsigned int)e);
-#endif
+  log_debug("Environment 0x%lX created.", (uintptr_t)e);
 
   e->parent = parent_frame;
   e->bindings = new_dictionary();
@@ -138,9 +139,7 @@ void remove_descendant(environment_frame_t *env)
     env->descendants--;
   }
 
-#ifdef DEBUG_TRACE
-  printf("Removing descendant from environment 0x%X. Now has %d\n", (unsigned int)env, env->descendants);
-#endif
+  log_debug("Removing descendant from environment 0x%lX. Now has %d", (uintptr_t)env, env->descendants);
 
   if (env->descendants == 0 && !env->in_scope) {
     go_out_of_scope(env);
@@ -156,9 +155,7 @@ void release_binding(void *data)
 
 void clean_environment(environment_frame_t *env)
 {
-#ifdef DEBUG_TRACE
-  printf("Cleaning environment 0x%X.\n", (unsigned int)env);
-#endif
+  log_debug("Cleaning environment 0x%lX.", (uintptr_t)env);
 
   with_each_value_do(env->bindings, &release_binding);
 }
@@ -171,9 +168,7 @@ void go_out_of_scope(environment_frame_t *env)
   }
   env->in_scope = false;
   if (env->descendants == 0) {
-#ifdef DEBUG_TRACE
-    printf("Environment 0x%X is going out of scope.\n", (unsigned int)env);
-#endif
+    log_debug("Environment 0x%lX is going out of scope.", (uintptr_t)env);
     remove_descendant(env->parent);
     remove_environment(env);
     clean_environment(env);
